@@ -44,7 +44,15 @@ end
 function ravMounts:MountSummon(list)
     local inCombat = UnitAffectingCombat("player")
     if not inCombat and #list > 0 then
-        C_MountJournal.SummonByID(list[random(#list)])
+
+        local iter = 10 -- magic number (can random fail us so much?)
+        local n = random(#list)
+        while not select(5, C_MountJournal.GetMountInfoByID(list[n])) and iter > 0 do
+            n = random(#list)
+            iter = iter - 1
+        end
+
+        C_MountJournal.SummonByID(list[n])
     end
 end
 
